@@ -3,11 +3,16 @@ uuid = "318dcf79-f1de-4874-b31b-6e12fc76f75a"
 authors = ["SixZero <havliktomi@hotmail.com> and contributors"]
 version = "0.1.0"
 
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+[deps]
+PromptingTools = "670122d1-24a8-4d70-bfce-740807c42192"
+StreamCallbacks = "c1b9e933-98a0-46fc-8ea7-3b58b195fb0a"
 
 [compat]
+StreamCallbacks = "0.5.0"
 julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
 test = ["Test"]
