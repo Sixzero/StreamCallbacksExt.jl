@@ -91,6 +91,36 @@ Two built-in formatters are provided:
   [🔤 in:10 out:20 cache:(w:2,r:5) 💰$0.0015 ⚡️1.234s]
   ```
 
+## Core Types
+
+### TokenCounts
+
+Tracks token usage across different categories:
+- `input`: Number of new tokens in the prompt (excluding cached tokens)
+- `output`: Number of generated tokens in the response
+- `cache_write`: Number of tokens written to cache
+- `cache_read`: Number of tokens read from cache
+
+Note: Total input tokens = input + cache_write + cache_read
+
+### TimingInfo
+
+Tracks timing-related information during the streaming process:
+- `creation_time`: When the callback was created
+- `inference_start`: When the model started processing
+- `last_message_time`: Timestamp of the last received message
+
+### StreamCallbackWithTokencounts
+
+Main callback type that implements token counting, cost tracking, and timing:
+- `out`: Output IO stream (default: stdout)
+- `flavor`: Stream format handler (OpenAI/Anthropic)
+- `total_tokens`: Accumulated token counts
+- `model`: Model identifier
+- `token_formatter`: Function to format token statistics
+- `content_formatter`: Function to format streamed content
+- `timing`: Timing information
+
 ## Dependencies
 
 - StreamCallbacks.jl

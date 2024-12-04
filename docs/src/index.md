@@ -1,14 +1,12 @@
-```@meta
-CurrentModule = StreamCallbacksExt
-```
+# StreamCallbacksExt.jl
 
-# StreamCallbacksExt
+Documentation for [StreamCallbacksExt.jl](https://github.com/SixZero/StreamCallbacksExt.jl).
 
-Documentation for [StreamCallbacksExt](https://github.com/SixZero/StreamCallbacksExt.jl).
+## Types
 
-```@index
-```
+TokenCounts
+TimingInfo
+StreamCallbackWithTokencounts
 
-```@autodocs
-Modules = [StreamCallbacksExt]
-```
+## Functions
+
