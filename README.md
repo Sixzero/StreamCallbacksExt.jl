@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/SixZero/StreamCallbacksExt.jl/workflows/CI/badge.svg)](https://github.com/SixZero/StreamCallbacksExt.jl/actions)
 [![Coverage](https://codecov.io/gh/SixZero/StreamCallbacksExt.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/SixZero/StreamCallbacksExt.jl)
 
-Extension package for [StreamCallbacks.jl](https://github.com/svilup/StreamCallbacks.jl) that adds token counting, cost calculation, and timing functionality, primarily designed to enhance streaming capabilities in [PromptingTools.jl](https://github.com/svilup/PromptingTools.jl).
+Extension package for [StreamCallbacks.jl](https://github.com/svilupp/StreamCallbacks.jl) that adds token counting, cost calculation, and timing functionality, primarily designed to enhance streaming capabilities in [PromptingTools.jl](https://github.com/svilupp/PromptingTools.jl).
 
 ## Features
 
