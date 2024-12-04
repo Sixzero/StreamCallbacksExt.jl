@@ -9,8 +9,18 @@ include("formatters.jl")
 include("extractors.jl")
 include("costs.jl")
 
+"""
+    callback(cb::StreamCallbackWithTokencounts, chunk::StreamChunk; kwargs...)
+
+Process a stream chunk through the token-counting callback. This implementation:
+- Tracks timing information for inference
+- Extracts and accumulates token counts
+- Calculates costs based on model and token usage
+- Formats and prints token statistics and content
+
+Returns a Dict with token counts if token information is available in the chunk.
+"""
 function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::StreamChunk; kwargs...)
-    @show chunk.json
     if !isnothing(chunk.json) && get(chunk.json, :type, nothing) == "message_start"
         cb.timing.inference_start = time()
     end
