@@ -1,4 +1,5 @@
 using StreamCallbacksExt
+using StreamCallbacksExt: get_cost, extract_model, extract_tokens
 using StreamCallbacks
 using Test
 using PromptingTools

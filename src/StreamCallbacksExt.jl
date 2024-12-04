@@ -9,9 +9,10 @@ include("formatters.jl")
 include("extractors.jl")
 include("costs.jl")
 
-function StreamCallbacks.callback(cb::TokenStreamCallback, chunk::StreamChunk; kwargs...)
+function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::StreamChunk; kwargs...)
+    @show chunk.json
     if !isnothing(chunk.json) && get(chunk.json, :type, nothing) == "message_start"
-        cb.inference_start = time()
+        cb.timing.inference_start = time()
     end
     
     if isnothing(cb.model) && !isnothing(cb.flavor)
@@ -28,20 +29,20 @@ function StreamCallbacks.callback(cb::TokenStreamCallback, chunk::StreamChunk; k
             0.0
         end
         
-        cb.last_message_time = time()
-        elapsed = time() - cb.creation_time
+        cb.timing.last_message_time = time()
+        elapsed = time() - cb.timing.creation_time
         
         println(cb.out, cb.token_formatter(tokens, cost, elapsed))
-        return nothing
+        return Dict(:prompt_tokens => tokens.input, :completion_tokens => tokens.output)
     end
     
     processed_text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)
-    isnothing(processed_text) && return nothing
+    isnothing(processed_text) && return "HEY"
     
     print(cb.out, cb.content_formatter(processed_text))
 end
 
-export TokenCounts, TokenStreamCallback,
+export TokenCounts, StreamCallbackWithTokencounts,
     default_token_formatter, compact_token_formatter, default_content_formatter
 
 end

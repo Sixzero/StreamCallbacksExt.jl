@@ -1,7 +1,8 @@
+
 @testset "Callback Integration" begin
     # Test full callback functionality with a mock stream
     buf = IOBuffer()
-    cb = TokenStreamCallback(
+    cb = StreamCallbackWithTokencounts(
         out=buf,
         flavor=StreamCallbacks.OpenAIStream()
     )
@@ -9,21 +10,25 @@
     # Simulate a stream of chunks
     chunks = [
         StreamChunk(  # Start message
-            json = Dict(
+            json = JSON3.read(JSON3.write(Dict(
                 :type => "message_start",
                 :model => "gpt-4"
-            )
+            )))
         ),
-        StreamChunk(  # Content
-            json = Dict(:content => "Hello")
+        StreamChunk(  # Content in OpenAI format
+            json = JSON3.read(JSON3.write(Dict(
+                :choices => [
+                    Dict(:delta => Dict(:content => "Hello"))
+                ]
+            )))
         ),
         StreamChunk(  # Usage info
-            json = Dict(
+            json = JSON3.read(JSON3.write(Dict(
                 :usage => Dict(
                     :prompt_tokens => 10,
                     :completion_tokens => 5
                 )
-            )
+            )))
         )
     ]
 
