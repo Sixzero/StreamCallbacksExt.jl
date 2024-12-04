@@ -273,28 +273,6 @@ deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 version = "1.11.0"
 
-[[deps.PromptingTools]]
-deps = ["AbstractTrees", "Base64", "Dates", "HTTP", "JSON3", "Logging", "OpenAI", "Pkg", "PrecompileTools", "Preferences", "REPL", "Random", "StreamCallbacks", "Test"]
-path = "../../../PromptingTools.jl"
-uuid = "670122d1-24a8-4d70-bfce-740807c42192"
-version = "0.65.0"
-
-    [deps.PromptingTools.extensions]
-    FlashRankPromptingToolsExt = ["FlashRank"]
-    GoogleGenAIPromptingToolsExt = ["GoogleGenAI"]
-    MarkdownPromptingToolsExt = ["Markdown"]
-    RAGToolsExperimentalExt = ["SparseArrays", "LinearAlgebra", "Unicode"]
-    SnowballPromptingToolsExt = ["Snowball"]
-
-    [deps.PromptingTools.weakdeps]
-    FlashRank = "22cc3f58-1757-4700-bb45-2032706e5a8d"
-    GoogleGenAI = "903d41d1-eaca-47dd-943b-fee3930375ab"
-    LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
-    Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
-    Snowball = "fb8f903a-0164-4e73-9ffe-431110250c3b"
-    SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
-    Unicode = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
-
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "StyledStrings", "Unicode"]
 uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
@@ -333,12 +311,6 @@ deps = ["HTTP", "JSON3", "PrecompileTools"]
 git-tree-sha1 = "827180547dd10f4c018ccdbede9375c76dbdcafe"
 uuid = "c1b9e933-98a0-46fc-8ea7-3b58b195fb0a"
 version = "0.5.0"
-
-[[deps.StreamCallbacksExt]]
-deps = ["PromptingTools", "StreamCallbacks"]
-path = ".."
-uuid = "318dcf79-f1de-4874-b31b-6e12fc76f75a"
-version = "0.1.0"
 
 [[deps.StructTypes]]
 deps = ["Dates", "UUIDs"]
