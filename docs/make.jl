@@ -1,3 +1,4 @@
+using StreamCallbacks
 using StreamCallbacksExt
 using Documenter
 
