@@ -7,11 +7,11 @@ DocMeta.setdocmeta!(StreamCallbacksExt, :DocTestSetup, :(using StreamCallbacksEx
 makedocs(;
     modules=[StreamCallbacksExt],
     authors="SixZero <havliktomi@gmail.com> and contributors",
-    repo="https://github.com/SixZero/StreamCallbacksExt.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/Sixzero/StreamCallbacksExt.jl/blob/{commit}{path}#{line}",
     sitename="StreamCallbacksExt.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://SixZero.github.io/StreamCallbacksExt.jl",
+        canonical="https://Sixzero.github.io/StreamCallbacksExt.jl",
         assets=String[],
     ),
     pages=[
@@ -20,6 +20,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/SixZero/StreamCallbacksExt.jl",
+    repo="github.com/Sixzero/StreamCallbacksExt.jl",
     devbranch="master",
 )
