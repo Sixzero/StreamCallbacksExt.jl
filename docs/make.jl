@@ -6,7 +6,7 @@ DocMeta.setdocmeta!(StreamCallbacksExt, :DocTestSetup, :(using StreamCallbacksEx
 
 makedocs(;
     modules=[StreamCallbacksExt],
-    authors="SixZero <havliktomi@hotmail.com> and contributors",
+    authors="SixZero <havliktomi@gmail.com> and contributors",
     repo="https://github.com/SixZero/StreamCallbacksExt.jl/blob/{commit}{path}#{line}",
     sitename="StreamCallbacksExt.jl",
     format=Documenter.HTML(;
