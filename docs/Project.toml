@@ -1,3 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 StreamCallbacksExt = "318dcf79-f1de-4874-b31b-6e12fc76f75a"
+
+[extras]
+StreamCallbacks = "c1b9e933-98a0-46fc-8ea7-3b58b195fb0a"
