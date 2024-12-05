@@ -2,7 +2,7 @@ using StreamCallbacks
 using StreamCallbacksExt
 using Documenter
 
-DocMeta.setdocmeta!(StreamCallbacksExt, :DocTestSetup, :(using StreamCallbacksExt); recursive=true)
+DocMeta.setdocmeta!(StreamCallbacksExt, :DocTestSetup, :(using StreamCallbacksExt; using StreamCallbacks); recursive=true)
 
 makedocs(;
     modules=[StreamCallbacksExt],
