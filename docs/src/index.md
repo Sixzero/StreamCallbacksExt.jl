@@ -43,18 +43,20 @@ msg = aigenerate("Write a story about a space cat";
 Two built-in formatters are provided:
 
 ### Default Text Format
-# [in=10, out=20, cache_in=2, cache_read=5, \$0.0015, 1.234s]
+
 cb = StreamCallbackWithTokencounts(
     flavor = StreamCallbacks.OpenAIStream(),
     token_formatter = default_token_formatter
 )
+[in=10, out=20, cache_in=2, cache_read=5, \$0.0015, 1.234s]
 
 ### Compact Emoji Format
-# [🔤 in:10 out:20 cache:(w:2,r:5) 💰\$0.0015 ⚡️1.234s]
+
 cb = StreamCallbackWithTokencounts(
     flavor = StreamCallbacks.OpenAIStream(),
     token_formatter = compact_token_formatter
 )
+[🔤 in:10 out:20 cache:(w:2,r:5) 💰\$0.0015 ⚡️1.234s]
 
 ### Custom Formatter
 # Create your own formatter
