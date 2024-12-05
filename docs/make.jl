@@ -19,6 +19,7 @@ makedocs(;
     ],
 )
 
+# ENV["GITHUB_REPOSITORY"] = "Sixzero/StreamCallbacksExt.jl"
 deploydocs(;
     repo="github.com/Sixzero/StreamCallbacksExt.jl",
     devbranch="master",
