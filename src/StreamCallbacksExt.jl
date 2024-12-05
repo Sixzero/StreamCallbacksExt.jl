@@ -52,7 +52,16 @@ function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::Stre
     print(cb.out, cb.content_formatter(processed_text))
 end
 
-export TokenCounts, StreamCallbackWithTokencounts,
-    default_token_formatter, compact_token_formatter, default_content_formatter
+# Export all public types and functions
+export 
+    # Types
+    TokenCounts,
+    TimingInfo,
+    StreamCallbackWithTokencounts,
+    
+    # Formatters
+    default_token_formatter,
+    compact_token_formatter,
+    default_content_formatter
 
 end
