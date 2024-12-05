@@ -5,7 +5,6 @@ using Test
 using PromptingTools
 
 @testset "StreamCallbacksExt.jl" begin
-    # Include all test files
     include("token_counts_test.jl")
     include("formatters_test.jl")
     include("extractors_test.jl")

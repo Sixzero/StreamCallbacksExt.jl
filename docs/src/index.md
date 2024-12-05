@@ -2,7 +2,12 @@
 
 Documentation for [StreamCallbacksExt.jl](https://github.com/SixZero/StreamCallbacksExt.jl).
 
-Extension package for [StreamCallbacks.jl](https://github.com/svilupp/StreamCallbacks.jl) that adds token counting, cost calculation, and timing functionality, primarily designed to enhance streaming capabilities in [PromptingTools.jl](https://github.com/svilupp/PromptingTools.jl).
+Extension package for [StreamCallbacks.jl](https://github.com/svilupp/StreamCallbacks.jl) with 3 things in mind:
+- Instant feedback as soon as usage package comes in.
+- Cached token informations
+- Cached token costs
+also adding timing for prompt processing time and inference time.
+Primarily designed to extend streaming capabilities in [PromptingTools.jl](https://github.com/svilupp/PromptingTools.jl).
 
 ## Features
 
