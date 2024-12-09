@@ -55,7 +55,7 @@ Format AI message with token counts in green color.
 """
 function format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? "" : ", $(round(elapsed; digits=2))s"
-    "\n$(AI_COLOR)AI message: [$(tokens.output) out, \$$(round(cost; digits=4))$elapsed_str]$(Crayon(reset=true))"
+    "$(AI_COLOR)AI message: [$(tokens.output) out, \$$(round(cost; digits=4))$elapsed_str]$(Crayon(reset=true))"
 end
 
 """

@@ -146,4 +146,7 @@ StreamCallbacksExt.format_ai_message
 StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.OpenAIStream, ::StreamCallbacks.AbstractStreamChunk)
 StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.AnthropicStream, ::StreamCallbacks.AbstractStreamChunk)
 StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.AbstractStreamFlavor, ::StreamCallbacks.AbstractStreamChunk)
+StreamCallbacksExt.handle_token_metadata(::StreamCallbacks.OpenAIStream, ::Any, ::Any, ::Any, ::Any)
+StreamCallbacksExt.handle_token_metadata(::StreamCallbacks.AnthropicStream, ::Any, ::Any, ::Any, ::Any)
+StreamCallbacksExt.handle_token_metadata(::StreamCallbacks.AbstractStreamFlavor, ::Any, ::Any, ::Any, ::Any)
 ```

@@ -8,6 +8,7 @@ include("types.jl")
 include("formatters.jl")
 include("extractors.jl")
 include("costs.jl")
+include("token_handlers.jl")
 
 """
     callback(cb::StreamCallbackWithTokencounts, chunk::StreamChunk; kwargs...)
@@ -65,7 +66,8 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     # Handle message start
     if get(chunk.json, :type, nothing) == "message_start"
         cb.timing.inference_start = time()
-        println(cb.out, cb.on_start())
+        msg = cb.on_start()
+        !isnothing(msg) && println(cb.out, msg)
     end
 
     # Extract model info if needed
@@ -73,22 +75,14 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
         cb.model = extract_model(cb.flavor, chunk)
     end
 
-    # Handle token metadata
+    # Handle token metadata with flavor-specific dispatch
     if !isnothing(cb.flavor) && (tokens = extract_tokens(cb.flavor, chunk)) !== nothing
         cb.total_tokens = cb.total_tokens + tokens
         cost = get_cost(cb.flavor, !isnothing(cb.model) ? cb.model : get(kwargs, :model, ""), cb.total_tokens)
         cb.timing.last_message_time = time()
         elapsed = time() - cb.timing.creation_time
 
-        # Dispatch metadata hooks based on token type
-        msg = if tokens.output > 0
-            cb.on_meta_ai(tokens, cost, elapsed)
-        else
-            cb.on_meta_usr(tokens, cost, elapsed)
-        end
-        !isnothing(msg) && println(cb.out, msg)
-
-        # return Dict(:prompt_tokens => tokens.input, :completion_tokens => tokens.output)
+        handle_token_metadata(cb.flavor, cb, tokens, cost, elapsed)
     end
 
     # Handle content
