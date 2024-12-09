@@ -26,17 +26,19 @@ end
 )
 
 """
-    TimingInfo(; creation_time=time(), inference_start=nothing, last_message_time=nothing)
+    RunInfo(; creation_time=time(), inference_start=nothing, last_message_time=nothing, stop_sequence=nothing)
 
-Tracks timing information during the streaming process:
+Tracks run statistics and metadata during the streaming process:
 - `creation_time`: When the callback was created
 - `inference_start`: When the model started processing
 - `last_message_time`: Timestamp of the last received message
+- `stop_sequence`: The sequence that caused the generation to stop (if any)
 """
-@kwdef mutable struct TimingInfo
+@kwdef mutable struct RunInfo
     creation_time::Float64 = time()
     inference_start::Union{Float64,Nothing} = nothing
     last_message_time::Union{Float64,Nothing} = nothing
+    stop_sequence::Union{String,Nothing} = nothing
 end
 
 """
@@ -51,7 +53,7 @@ end
         model=nothing,
         token_formatter=default_token_formatter,
         content_formatter=default_content_formatter,
-        timing=TimingInfo()
+        timing=RunInfo()
     )
 
 A stream callback that tracks token usage, costs, and timing information.
@@ -86,5 +88,39 @@ cb = StreamCallbackWithTokencounts(
     model::Union{String,Nothing} = nothing
     token_formatter::Function = default_token_formatter
     content_formatter::Function = default_content_formatter
-    timing::TimingInfo = TimingInfo()
+    timing::RunInfo = RunInfo()  # Updated field name but keeping the variable name for compatibility
+end
+
+"""
+    StreamCallbackWithHooks(; kwargs...)
+
+A stream callback that combines token counting with customizable hooks for various events.
+
+# Hooks
+- `content_formatter`: Function to process and format content text
+- `on_meta_usr`: Handler for user token counts/metadata
+- `on_meta_ai`: Handler for AI token counts/metadata and chunk
+- `on_error`: Error handler
+- `on_done`: Completion handler
+- `on_start`: Start handler
+"""
+@kwdef mutable struct StreamCallbackWithHooks <: StreamCallbacks.AbstractStreamCallback
+    out::IO = stdout
+    flavor::Union{StreamCallbacks.AbstractStreamFlavor,Nothing} = nothing
+    chunks::Vector{StreamChunk} = StreamChunk[]
+    verbose::Bool = false
+    throw_on_error::Bool = false
+    kwargs::NamedTuple = NamedTuple()
+    total_tokens::TokenCounts = TokenCounts()
+    model::Union{String,Nothing} = nothing
+    token_formatter::Function = default_token_formatter
+    timing::RunInfo = RunInfo()  # Updated field name but keeping the variable name for compatibility
+
+    # Hooks with colored formatters
+    content_formatter::Function = identity
+    on_meta_usr::Function = (tokens, cost=0.0, elapsed=nothing) -> format_user_message(tokens, cost, elapsed)
+    on_meta_ai::Function = (tokens, cost=0.0, elapsed=nothing) -> format_ai_message(tokens, cost, elapsed)
+    on_error::Function = e -> format_error_message(e)
+    on_done::Function = () -> nothing
+    on_start::Function = () -> nothing
 end

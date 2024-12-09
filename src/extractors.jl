@@ -39,16 +39,34 @@ end
 """
     extract_tokens(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
 
-Extract token counts from OpenAI stream chunks. Handles both legacy and new token counting formats,
-including cache hit/miss statistics.
+Extract token counts from OpenAI stream chunks. Handles:
+- Legacy format with prompt_tokens and completion_tokens
+- Cache hit/miss statistics
+- Detailed token breakdowns (cached_tokens, audio_tokens)
+- End-of-stream combined usage statistics
 """
 function extract_tokens(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
     !isnothing(chunk.json) || return nothing
     usage = get(chunk.json, :usage, nothing)
     isnothing(usage) && return nothing
-    
-    prompt_details = get(usage, :prompt_tokens_details, nothing)
 
+    # Handle end-of-stream combined stats
+    if haskey(usage, :prompt_tokens) && haskey(usage, :completion_tokens) &&
+       haskey(usage, :prompt_tokens_details)
+        prompt_details = usage.prompt_tokens_details
+        cache_read = get(prompt_details, :cached_tokens, 0)
+        audio_tokens = get(prompt_details, :audio_tokens, 0)
+
+        return TokenCounts(
+            input = usage.prompt_tokens - cache_read - audio_tokens,
+            output = usage.completion_tokens,
+            cache_write = 0,
+            cache_read = cache_read
+        )
+    end
+
+    # Handle streaming format with cache stats
+    prompt_details = get(usage, :prompt_tokens_details, nothing)
     if haskey(usage, :prompt_cache_hit_tokens)
         TokenCounts(
             input = get(usage, :prompt_cache_miss_tokens, 0),
@@ -96,4 +114,45 @@ Default model extractor that warns about unimplemented flavors.
 function extract_model(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
     @warn "Unimplemented model extractor for flavor: $(typeof(flavor))"
     nothing
+end
+
+"""
+    extract_stop_sequence(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Default stop sequence extractor that returns nothing.
+"""
+function extract_stop_sequence(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+    nothing
+end
+
+"""
+    extract_stop_sequence(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract stop sequence from OpenAI stream chunks. Handles both delta.stop_sequence and finish_reason="stop".
+"""
+function extract_stop_sequence(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    !isnothing(chunk.json) || return nothing
+
+    # Handle delta.stop_sequence format
+    if haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
+       haskey(chunk.json.choices[1], :delta) && haskey(chunk.json.choices[1].delta, :stop_sequence)
+        return chunk.json.choices[1].delta.stop_sequence
+    end
+
+    # Handle finish_reason="stop" format
+    if haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
+       haskey(chunk.json.choices[1], :finish_reason) && chunk.json.choices[1].finish_reason == "stop"
+        return "stop"
+    end
+    nothing
+end
+
+"""
+    extract_stop_sequence(::StreamCallbacks.AnthropicStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract stop sequence from Anthropic stream chunks.
+"""
+function extract_stop_sequence(::StreamCallbacks.AnthropicStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    !isnothing(chunk.json) || return nothing
+    get(chunk.json, :stop_sequence, nothing)
 end
