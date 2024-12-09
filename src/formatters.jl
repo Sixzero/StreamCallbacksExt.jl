@@ -39,7 +39,7 @@ Default content formatter that returns the text unchanged.
 default_content_formatter(text::AbstractString) = text
 
 """
-    format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing})
+    format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
 Format user message with token counts in yellow color.
 """
@@ -49,7 +49,7 @@ function format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{
 end
 
 """
-    format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing})
+    format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
 Format AI message with token counts in green color.
 """
@@ -59,7 +59,7 @@ function format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Fl
 end
 
 """
-    format_error_message(e)
+    format_error_message(e) -> String
 
 Format error message in red color.
 """
@@ -68,7 +68,7 @@ function format_error_message(e)
 end
 
 """
-    format_info_message(msg)
+    format_info_message(msg) -> String
 
 Format info messages in blue color.
 """

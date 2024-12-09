@@ -77,11 +77,12 @@ Tracks token usage across different categories:
 
 Note: Total input tokens = input + cache_write + cache_read
 
-### TimingInfo
+### RunInfo
 Tracks timing-related information during the streaming process:
 - `creation_time`: When the callback was created
 - `inference_start`: When the model started processing
 - `last_message_time`: Timestamp of the last received message
+- `stop_sequence`: The sequence that caused the generation to stop (if any)
 
 ### StreamCallbackWithTokencounts
 Main callback type that implements token counting, cost tracking, and timing:
@@ -92,7 +93,7 @@ StreamCallbackWithTokencounts(;
     model = nothing,           # Model identifier
     token_formatter = default_token_formatter,
     content_formatter = default_content_formatter,
-    timing = TimingInfo()
+    timing = RunInfo()
 )
 
 ## Cost Calculation
@@ -127,7 +128,7 @@ StreamCallbacksExt.extract_model(::StreamCallbacks.OpenAIStream, ::StreamCallbac
 StreamCallbacksExt.extract_model(::StreamCallbacks.AbstractStreamFlavor, ::StreamCallbacks.AbstractStreamChunk)
 StreamCallbacksExt.get_cost(::StreamCallbacks.OpenAIStream, ::String, ::Any)
 StreamCallbacksExt.get_cost(::StreamCallbacks.AnthropicStream, ::String, ::Any)
-StreamCallbacksExt.TimingInfo
+StreamCallbacksExt.RunInfo
 StreamCallbacksExt.default_content_formatter
 StreamCallbacksExt.extract_tokens(::StreamCallbacks.AnthropicStream, ::StreamCallbacks.AbstractStreamChunk)
 StreamCallbacksExt.extract_tokens(::StreamCallbacks.OpenAIStream, ::StreamCallbacks.AbstractStreamChunk)
@@ -137,6 +138,12 @@ StreamCallbacksExt.calculate_cost
 StreamCallbacks.callback(::StreamCallbackWithTokencounts, ::StreamCallbacks.StreamChunk)
 StreamCallbacksExt.default_token_formatter
 StreamCallbacksExt.StreamCallbackWithTokencounts
+StreamCallbacksExt.StreamCallbackWithHooks
+StreamCallbacksExt.format_user_message
+StreamCallbacksExt.format_error_message
+StreamCallbacksExt.format_info_message
+StreamCallbacksExt.format_ai_message
+StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.OpenAIStream, ::StreamCallbacks.AbstractStreamChunk)
+StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.AnthropicStream, ::StreamCallbacks.AbstractStreamChunk)
+StreamCallbacksExt.extract_stop_sequence(::StreamCallbacks.AbstractStreamFlavor, ::StreamCallbacks.AbstractStreamChunk)
 ```
-
-

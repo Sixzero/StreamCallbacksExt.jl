@@ -28,7 +28,9 @@ end
 """
     RunInfo(; creation_time=time(), inference_start=nothing, last_message_time=nothing, stop_sequence=nothing)
 
-Tracks run statistics and metadata during the streaming process:
+Tracks run statistics and metadata during the streaming process.
+
+# Fields
 - `creation_time`: When the callback was created
 - `inference_start`: When the model started processing
 - `last_message_time`: Timestamp of the last received message
@@ -96,13 +98,32 @@ end
 
 A stream callback that combines token counting with customizable hooks for various events.
 
+# Fields
+- `out`: Output IO stream (default: stdout)
+- `flavor`: Stream format handler (OpenAI/Anthropic)
+- `chunks`: Vector to store stream chunks
+- `verbose`: Enable verbose logging
+- `throw_on_error`: Whether to throw errors
+- `kwargs`: Additional keyword arguments
+- `total_tokens`: Accumulated token counts
+- `model`: Model identifier
+- `token_formatter`: Function to format token statistics
+- `timing`: Timing information
+
 # Hooks
 - `content_formatter`: Function to process and format content text
 - `on_meta_usr`: Handler for user token counts/metadata
-- `on_meta_ai`: Handler for AI token counts/metadata and chunk
+- `on_meta_ai`: Handler for AI token counts/metadata
 - `on_error`: Error handler
 - `on_done`: Completion handler
 - `on_start`: Start handler
+
+# Example
+```julia
+cb = StreamCallbackWithHooks(
+    on_meta_ai = (tokens, cost, elapsed) -> println("AI: \$(tokens.output) tokens")
+)
+```
 """
 @kwdef mutable struct StreamCallbackWithHooks <: StreamCallbacks.AbstractStreamCallback
     out::IO = stdout
