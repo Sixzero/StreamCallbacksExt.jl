@@ -90,7 +90,7 @@ cb = StreamCallbackWithTokencounts(
     model::Union{String,Nothing} = nothing
     token_formatter::Function = default_token_formatter
     content_formatter::Function = default_content_formatter
-    timing::RunInfo = RunInfo()  # Updated field name but keeping the variable name for compatibility
+    run_info::RunInfo = RunInfo()  # Renamed from timing to run_info
 end
 
 """
@@ -135,7 +135,7 @@ cb = StreamCallbackWithHooks(
     total_tokens::TokenCounts = TokenCounts()
     model::Union{String,Nothing} = nothing
     token_formatter::Function = default_token_formatter
-    timing::RunInfo = RunInfo()  # Updated field name but keeping the variable name for compatibility
+    run_info::RunInfo = RunInfo()  # Renamed from timing to run_info
 
     # Hooks with colored formatters
     content_formatter::Function = identity

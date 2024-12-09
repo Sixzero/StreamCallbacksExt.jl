@@ -23,7 +23,7 @@ Returns a Dict with token counts if token information is available in the chunk.
 """
 function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::StreamChunk; kwargs...)
     if !isnothing(chunk.json) && get(chunk.json, :type, nothing) == "message_start"
-        cb.timing.inference_start = time()
+        cb.run_info.inference_start = time()  # Changed from timing to run_info
     end
 
     if isnothing(cb.model) && !isnothing(cb.flavor)
@@ -41,11 +41,10 @@ function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::Stre
             0.0
         end
 
-        cb.timing.last_message_time = time()
-        elapsed = time() - cb.timing.creation_time
+        cb.run_info.last_message_time = time()  # Changed from timing to run_info
+        elapsed = time() - cb.run_info.creation_time  # Changed from timing to run_info
 
         println(cb.out, cb.token_formatter(tokens, cost, elapsed))
-        # return Dict(:prompt_tokens => tokens.input, :completion_tokens => tokens.output)
     end
 
     # Handle content
@@ -60,12 +59,12 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
 
     # Store stop sequence if present
     if !isnothing(cb.flavor) && (stop_seq = extract_stop_sequence(cb.flavor, chunk)) !== nothing
-        cb.timing.stop_sequence = stop_seq
+        cb.run_info.stop_sequence = stop_seq  # Changed from timing to run_info
     end
 
     # Handle message start
     if get(chunk.json, :type, nothing) == "message_start"
-        cb.timing.inference_start = time()
+        cb.run_info.inference_start = time()  # Changed from timing to run_info
         msg = cb.on_start()
         !isnothing(msg) && println(cb.out, msg)
     end
@@ -79,8 +78,8 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     if !isnothing(cb.flavor) && (tokens = extract_tokens(cb.flavor, chunk)) !== nothing
         cb.total_tokens = cb.total_tokens + tokens
         cost = get_cost(cb.flavor, !isnothing(cb.model) ? cb.model : get(kwargs, :model, ""), cb.total_tokens)
-        cb.timing.last_message_time = time()
-        elapsed = time() - cb.timing.creation_time
+        cb.run_info.last_message_time = time()  # Changed from timing to run_info
+        elapsed = time() - cb.run_info.creation_time  # Changed from timing to run_info
 
         handle_token_metadata(cb.flavor, cb, tokens, cost, elapsed)
     end
