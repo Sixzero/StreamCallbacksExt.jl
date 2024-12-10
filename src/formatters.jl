@@ -41,21 +41,21 @@ default_content_formatter(text::AbstractString) = text
 """
     format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
-Format user message with token counts in yellow color.
+Format user message with token counts in green color, including token statistics and optional timing.
 """
 function format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? "" : ", $(round(elapsed; digits=2))s"
-    "$(USER_COLOR)User message: [$(tokens.input) in, $(tokens.cache_write) cache creation, $(tokens.cache_read) cache read, \$$(round(cost; digits=6))$elapsed_str]$(Crayon(reset=true))"
+    "$(USER_COLOR)User message: [$(tokens.input) in, $(tokens.cache_write) cache creation, $(tokens.cache_read) cache read, \$$(round(cost; digits=3))$elapsed_str]$(Crayon(reset=true))"
 end
 
 """
     format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
-Format AI message with token counts in green color.
+Format AI message with token counts in green color, including output tokens, cost and optional timing.
 """
 function format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? "" : ", $(round(elapsed; digits=2))s"
-    "$(AI_COLOR)AI message: [$(tokens.output) out, \$$(round(cost; digits=4))$elapsed_str]$(Crayon(reset=true))"
+    "$(AI_COLOR)AI message: [$(tokens.output) out, \$$(round(cost; digits=3))$elapsed_str]$(Crayon(reset=true))"
 end
 
 """

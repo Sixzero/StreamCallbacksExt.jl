@@ -57,11 +57,6 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     # Early return if no json
     isnothing(chunk.json) && return nothing
 
-    # Store stop sequence if present
-    if !isnothing(cb.flavor) && (stop_seq = extract_stop_sequence(cb.flavor, chunk)) !== nothing
-        cb.run_info.stop_sequence = stop_seq  # Changed from timing to run_info
-    end
-
     # Handle message start
     if get(chunk.json, :type, nothing) == "message_start"
         cb.run_info.inference_start = time()  # Changed from timing to run_info
@@ -78,8 +73,8 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     if !isnothing(cb.flavor) && (tokens = extract_tokens(cb.flavor, chunk)) !== nothing
         cb.total_tokens = cb.total_tokens + tokens
         cost = get_cost(cb.flavor, !isnothing(cb.model) ? cb.model : get(kwargs, :model, ""), cb.total_tokens)
-        cb.run_info.last_message_time = time()  # Changed from timing to run_info
-        elapsed = time() - cb.run_info.creation_time  # Changed from timing to run_info
+        cb.run_info.last_message_time = time()
+        elapsed = cb.run_info.last_message_time - cb.run_info.creation_time
 
         handle_token_metadata(cb.flavor, cb, tokens, cost, elapsed)
     end
@@ -96,6 +91,12 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
         cb.throw_on_error && rethrow(e)
     end
 
+    # Store stop sequence if present
+    if !isnothing(cb.flavor) && (stop_seq = extract_stop_sequence(cb.flavor, chunk)) !== nothing
+        cb.run_info.stop_sequence = stop_seq  # Changed from timing to run_info
+        cb.on_stop_sequence(stop_seq)
+    end
+
     # Handle completion
     if get(chunk.json, :type, nothing) in ("message_end", "message_stop")
         msg = cb.on_done()
@@ -106,13 +107,15 @@ end
 # Update exports
 export
     TokenCounts,
-    RunInfo,  # Changed from TimingInfo
+    RunInfo,
     StreamCallbackWithTokencounts,
     StreamCallbackWithHooks,
     default_token_formatter,
     compact_token_formatter,
     default_content_formatter,
-    extract_stop_sequence,  # Add this export
-    extract_tokens,         # Add this export
-    extract_model          # Add this export
+    extract_stop_sequence,
+    extract_tokens,
+    extract_model,
+    get_total_elapsed,
+    get_inference_elapsed
 end

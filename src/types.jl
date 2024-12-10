@@ -34,7 +34,14 @@ Tracks run statistics and metadata during the streaming process.
 - `creation_time`: When the callback was created
 - `inference_start`: When the model started processing
 - `last_message_time`: Timestamp of the last received message
-- `stop_sequence`: The sequence that caused the generation to stop (if any)
+- `stop_sequence`: The sequence that caused the generation to stop (if any). For OpenAI this can be:
+  - A specific stop sequence provided in the chunk's delta.stop_sequence
+  - "stop" if finish_reason is "stop"
+  For Anthropic this is the stop_sequence provided in the chunk.
+
+# Timing Methods
+- `get_total_elapsed(info)`: Get total elapsed time since callback creation
+- `get_inference_elapsed(info)`: Get elapsed time for inference phase only
 """
 @kwdef mutable struct RunInfo
     creation_time::Float64 = time()
@@ -42,6 +49,24 @@ Tracks run statistics and metadata during the streaming process.
     last_message_time::Union{Float64,Nothing} = nothing
     stop_sequence::Union{String,Nothing} = nothing
 end
+
+# Add utility functions for RunInfo
+"""
+    get_total_elapsed(info::RunInfo)
+
+Get total elapsed time since callback creation.
+Returns time in seconds or nothing if no messages received.
+"""
+get_total_elapsed(info::RunInfo) = !isnothing(info.last_message_time) ? info.last_message_time - info.creation_time : nothing
+
+"""
+    get_inference_elapsed(info::RunInfo)
+
+Get elapsed time for inference (time between first inference and last message).
+Returns time in seconds or nothing if inference hasn't started.
+"""
+get_inference_elapsed(info::RunInfo) = !isnothing(info.inference_start) && !isnothing(info.last_message_time) ?
+    info.last_message_time - info.inference_start : nothing
 
 """
     StreamCallbackWithTokencounts(; 
@@ -144,4 +169,5 @@ cb = StreamCallbackWithHooks(
     on_error::Function = e -> format_error_message(e)
     on_done::Function = () -> nothing
     on_start::Function = () -> nothing
+    on_stop_sequence::Function = identity
 end

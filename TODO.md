@@ -1,0 +1,2 @@
+ - [✓] Adding stop_sequence documentation.
+ - [ ] 
