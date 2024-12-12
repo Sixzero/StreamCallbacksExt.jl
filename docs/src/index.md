@@ -18,6 +18,8 @@ For detailed API documentation, see the [API Reference](api.md).
 - Timing information for inference and message processing
 - Customizable token and content formatters
 - Support for different stream flavors (OpenAI, Anthropic)
+- Flexible hook system for customizing callback behavior
+- Channel-based async processing for cleaner stacktraces
 
 ## Installation
 
@@ -41,6 +43,22 @@ msg = aigenerate("Write a story about a space cat";
     streamcallback=cb,
     model="gpt4om",
     api_kwargs=(stream=true,)
+)
+
+# Using hooks for custom behavior
+cb = StreamCallbackWithHooks(
+    content_formatter = text -> "AI: $text",
+    on_meta_usr = (tokens, cost, elapsed) -> "User tokens: $(tokens.input)",
+    on_meta_ai = (tokens, cost, elapsed) -> "AI tokens: $(tokens.output)",
+    on_error = e -> "Error: $e",
+    on_done = () -> "Generation complete!"
+)
+
+# Using channel wrapper for cleaner stacktraces
+cb = StreamCallbackChannelWrapper(
+    callback = StreamCallbackWithHooks(
+        on_error = e -> @warn("Error: $e")
+    )
 )
 ```
 
@@ -82,4 +100,3 @@ cb = StreamCallbackWithTokencounts(
 
 - [StreamCallbacks.jl](https://github.com/svilupp/StreamCallbacks.jl)
 - [PromptingTools.jl](https://github.com/svilupp/PromptingTools.jl)
-```

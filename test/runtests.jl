@@ -14,4 +14,5 @@ using PromptingTools
     include("extractors_test.jl")
     include("run_info_test.jl")
     include("stop_sequence_test.jl")
+    include("channel_callback_test.jl")
 end;
