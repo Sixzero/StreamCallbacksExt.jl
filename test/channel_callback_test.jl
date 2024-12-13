@@ -38,8 +38,16 @@ using JSON3
     )
     StreamCallbacks.callback(cb, chunk3)
 
-    # Wait for processing to complete
-    sleep(0.1)
+    # Wait for processing to complete with timeout
+    start_time = time()
+    timeout = 10.0  # 10 seconds timeout
+    while !isnothing(cb.task) && !istaskdone(cb.task)
+        sleep(0.01)
+        if time() - start_time > timeout
+            @warn "Channel callback test timed out after $timeout seconds"
+            break
+        end
+    end
 
     @test length(output) > 0
     @test output[1] == "test"
