@@ -18,6 +18,7 @@ StreamCallbacksExt.TokenCounts
 StreamCallbacksExt.RunInfo
 StreamCallbacksExt.StreamCallbackWithTokencounts
 StreamCallbacksExt.StreamCallbackWithHooks
+StreamCallbacksExt.StreamCallbackChannelWrapper
 ```
 
 ## Formatters
@@ -60,5 +61,6 @@ StreamCallbacksExt.calculate_cost
 
 ```@docs
 StreamCallbacks.callback(::StreamCallbackWithTokencounts, ::StreamCallbacks.StreamChunk)
+StreamCallbacks.callback(::StreamCallbackChannelWrapper, ::StreamCallbacks.StreamChunk)
 ```
 
