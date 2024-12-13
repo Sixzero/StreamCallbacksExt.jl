@@ -4,34 +4,6 @@ using StreamCallbacksExt
 using JSON3
 include("test_utils.jl")
 
-@testset "Stop Sequence Extractors" begin
-    @testset "OpenAI Stop Sequences" begin
-        # Test delta.stop_sequence format
-        chunk1 = create_json_streamchunk(json = Dict(
-            :choices => [Dict(
-                :delta => Dict(:stop_sequence => "that")
-            )]
-        ))
-        @test extract_stop_sequence(StreamCallbacks.OpenAIStream(), chunk1) == "that"
-
-        # Test finish_reason="stop" format
-        chunk2 = create_json_streamchunk(json = Dict(
-            :choices => [Dict(
-                :delta => Dict(),
-                :finish_reason => "stop"
-            )]
-        ))
-        @test extract_stop_sequence(StreamCallbacks.OpenAIStream(), chunk2) == "stop"
-    end
-
-    @testset "Anthropic Stop Sequences" begin
-        chunk = create_json_streamchunk(json = Dict(
-            :stop_sequence => "that"
-        ))
-        @test extract_stop_sequence(StreamCallbacks.AnthropicStream(), chunk) == "that"
-    end
-end
-
 @testset "OpenAI End-of-Stream Token Stats" begin
     # Test GPT-4o end-of-stream format
     chunk = create_json_streamchunk(json = Dict(

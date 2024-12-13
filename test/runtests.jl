@@ -4,7 +4,7 @@ using StreamCallbacks
 using Test
 using PromptingTools
 
-@testset "StreamCallbacksExt.jl" begin
+@testset "StreamCallbacksExt.jl" failfast=true begin
     include("token_counts_test.jl")
     include("formatters_test.jl")
     include("extractors_test.jl")

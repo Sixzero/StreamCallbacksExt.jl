@@ -133,17 +133,18 @@ Extract stop sequence from OpenAI stream chunks. Handles both delta.stop_sequenc
 function extract_stop_sequence(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
     !isnothing(chunk.json) || return nothing
 
-    # Handle delta.stop_sequence format
-    if haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
-       haskey(chunk.json.choices[1], :delta) && haskey(chunk.json.choices[1].delta, :stop_sequence)
-        return chunk.json.choices[1].delta.stop_sequence
-    end
-
     # Handle finish_reason="stop" format
     if haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
        haskey(chunk.json.choices[1], :finish_reason) && chunk.json.choices[1].finish_reason == "stop"
         return "stop"
     end
+
+    # Handle delta.stop_sequence format, although openai probably not using this...
+    if haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
+       haskey(chunk.json.choices[1], :delta) && haskey(chunk.json.choices[1].delta, :stop_sequence)
+        return chunk.json.choices[1].delta.stop_sequence
+    end
+    
     nothing
 end
 
