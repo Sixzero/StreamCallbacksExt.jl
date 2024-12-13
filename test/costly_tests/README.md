@@ -7,7 +7,7 @@ This directory contains tests that require API access and cost money to run. The
 To run the API tests:
 
 ```julia
-include("test/manual/api_test.jl")
+include("test/costly_tests/stop_sequence_test.jl")
 ```
 
 Note: Make sure you have valid API keys set up for both OpenAI and Anthropic before running these tests.

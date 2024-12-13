@@ -6,7 +6,7 @@ const PT = PromptingTools
 
 """
 Manual tests for API functionality. These tests cost money and should be run manually.
-To run: include("test/manual/api_test.jl")
+To run: include("test/costly_tests/stop_sequence_test.jl")
 """
 
 @testset "Manual API Tests" begin
