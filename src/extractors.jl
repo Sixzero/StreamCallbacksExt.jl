@@ -154,5 +154,7 @@ Extract stop sequence from Anthropic stream chunks.
 """
 function extract_stop_sequence(::StreamCallbacks.AnthropicStream, chunk::StreamCallbacks.AbstractStreamChunk)
     !isnothing(chunk.json) || return nothing
-    get(chunk.json, :stop_sequence, nothing)
+    delta = get(chunk.json, :delta, nothing)
+    isnothing(delta) && return nothing
+    get(delta, :stop_sequence, nothing)
 end
