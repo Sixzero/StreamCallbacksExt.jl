@@ -59,16 +59,6 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
         cb.model = extract_model(cb.flavor, chunk)
     end
 
-    # Handle token metadata with flavor-specific dispatch
-    if !isnothing(cb.flavor) && (tokens = extract_tokens(cb.flavor, chunk)) !== nothing
-        cb.total_tokens = cb.total_tokens + tokens
-        cost = get_cost(cb.flavor, !isnothing(cb.model) ? cb.model : get(kwargs, :model, ""), cb.total_tokens)
-        cb.run_info.last_message_time = time()
-        elapsed = cb.run_info.last_message_time - cb.run_info.creation_time
-
-        handle_token_metadata(cb.flavor, cb, tokens, cost, elapsed)
-    end
-
     # Handle content
     try
         if !isnothing(cb.flavor) && (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
@@ -85,6 +75,16 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     if !isnothing(cb.flavor) && (stop_seq = extract_stop_sequence(cb.flavor, chunk)) !== nothing
         cb.run_info.stop_sequence = stop_seq
         cb.on_stop_sequence(stop_seq)
+    end
+
+    # Handle token metadata with flavor-specific dispatch
+    if !isnothing(cb.flavor) && (tokens = extract_tokens(cb.flavor, chunk)) !== nothing
+        cb.total_tokens = cb.total_tokens + tokens
+        cost = get_cost(cb.flavor, !isnothing(cb.model) ? cb.model : get(kwargs, :model, ""), cb.total_tokens)
+        cb.run_info.last_message_time = time()
+        elapsed = cb.run_info.last_message_time - cb.run_info.creation_time
+
+        handle_token_metadata(cb.flavor, cb, tokens, cost, elapsed)
     end
 
     # Handle completion
