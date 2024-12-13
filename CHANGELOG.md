@@ -2,7 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2024-03-14
+## [0.3.1] - 2024-12-13
+
+### Added
+- Added timeout handling for channel callback tests
+- Added costly tests directory with README and manual API tests
+- Added StreamCallbackChannelWrapper to API documentation
+
+### Changed
+- Reordered OpenAI stop sequence extraction to prioritize finish_reason over delta.stop_sequence
+- Improved test organization with separate stop sequence tests
+- Added failfast option to test suite
+
+## [0.3.0] - 2024-12-13
+
+### Changed
+- Reordered callback processing in `StreamCallbackWithHooks` to handle content before token metadata
+- Fixed Anthropic stop sequence extraction to properly handle delta structure
+
+## [0.2.0] - 2024-12-12
 
 ### Added
 - New `StreamCallbackWithHooks` struct for flexible callback customization with hooks
@@ -19,7 +37,7 @@ All notable changes to this project will be documented in this file.
 - Better handling of stream chunk processing errors
 - Improved token counting accuracy with cache handling
 
-## [0.1.0] - 2024-03-01
+## [0.1.0] - 2024-12-09
 
 ### Added
 - Initial release
