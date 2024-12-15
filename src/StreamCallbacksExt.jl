@@ -1,8 +1,6 @@
 module StreamCallbacksExt
 
 using StreamCallbacks
-using PromptingTools
-const PT = PromptingTools
 
 include("types.jl")
 include("formatters.jl")
