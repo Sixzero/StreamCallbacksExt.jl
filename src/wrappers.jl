@@ -1,8 +1,4 @@
 """
-Module containing callback wrappers that enhance or modify base callback behavior.
-"""
-
-"""
     StreamCallbackChannelWrapper(callback::StreamCallbackWithHooks; buffer_size=32)
 
 A wrapper that processes stream chunks through a channel, providing isolated error handling
