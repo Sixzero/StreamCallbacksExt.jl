@@ -51,6 +51,7 @@ create_json_streamchunk(; json, event=nothing) = StreamChunk(
     events = String[]  # Reset events array
     cb = StreamCallbackWithHooks(
         flavor = StreamCallbacks.OpenAIStream(),  # Add flavor to enable content extraction
+        out = devnull,  # Redirect output to devnull
         content_formatter = _ -> error("test error"),
         on_error = e -> push!(events, "error"),
         throw_on_error = false,

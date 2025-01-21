@@ -69,7 +69,7 @@ function StreamCallbacks.callback(cb::StreamCallbackChannelWrapper, chunk::Strea
     put!(cb.channel, chunk)
 
     # Handle end conditions
-    if get(chunk.json, :type, nothing) in ("message_end", "message_stop")
+    if isnothing(chunk.json) || get(chunk.json, :type, nothing) in ("message_end", "message_stop")
         put!(cb.channel, nothing)  # Signal to stop processing
     end
 

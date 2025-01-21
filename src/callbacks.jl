@@ -38,8 +38,13 @@ function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::Stre
     end
 
     # Handle content
-    if !isnothing(cb.flavor) && (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
-        print(cb.out, cb.content_formatter(text))
+    if !isnothing(cb.flavor)
+        if (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
+            print(cb.out, cb.content_formatter(text))
+        end
+        if (reasoning = extract_reasoning(cb.flavor, chunk)) !== nothing
+            print(cb.out, "$(REASONING_COLOR)$reasoning$(Crayon(reset=true))")
+        end
     end
 end
 
@@ -61,9 +66,19 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
 
     # Handle content
     try
-        if !isnothing(cb.flavor) && (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
-            formatted = cb.content_formatter(text)
-            !isnothing(formatted) && print(cb.out, formatted)
+        if !isnothing(cb.flavor)
+            if (reasoning = extract_reasoning(cb.flavor, chunk)) !== nothing
+                !cb.in_reasoning_mode && print(cb.out, "$(REASONING_COLOR)")
+                cb.in_reasoning_mode = true
+                print(cb.out, reasoning)
+            elseif (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
+                if cb.in_reasoning_mode
+                    print(cb.out, "$(Crayon(reset=true))\n\n")
+                    cb.in_reasoning_mode = false
+                end
+                formatted = cb.content_formatter(text)
+                !isnothing(formatted) && print(cb.out, formatted)
+            end
         end
     catch e
         msg = cb.on_error(e)

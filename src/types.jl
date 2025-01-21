@@ -157,10 +157,13 @@ cb = StreamCallbackWithHooks(
     verbose::Bool = false
     throw_on_error::Bool = false
     kwargs::NamedTuple = NamedTuple()
+    run_info::RunInfo = RunInfo()
     total_tokens::TokenCounts = TokenCounts()
     model::Union{String,Nothing} = nothing
     token_formatter::Function = default_token_formatter
-    run_info::RunInfo = RunInfo()  # Renamed from timing to run_info
+
+    # some inner workings...
+    in_reasoning_mode::Bool = false
 
     # Hooks with colored formatters
     content_formatter::Function = identity

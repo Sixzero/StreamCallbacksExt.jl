@@ -159,3 +159,30 @@ function extract_stop_sequence(::StreamCallbacks.AnthropicStream, chunk::StreamC
     isnothing(delta) && return nothing
     get(delta, :stop_sequence, nothing)
 end
+
+"""
+    extract_reasoning(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Default reasoning content extractor that warns if unhandled reasoning content is detected.
+"""
+function extract_reasoning(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+    if !isnothing(chunk.json) && haskey(chunk.json, :choices) && !isempty(chunk.json.choices) &&
+       haskey(chunk.json.choices[1], :delta) && haskey(chunk.json.choices[1].delta, :reasoning_content)
+        @warn "Unhandled reasoning content for flavor: $(typeof(flavor))"
+    end
+    nothing
+end
+
+"""
+    extract_reasoning(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract reasoning content from OpenAI stream chunks.
+"""
+function extract_reasoning(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    isnothing(chunk.json) && return nothing
+    haskey(chunk.json, :choices) || return nothing
+    isempty(chunk.json.choices) && return nothing
+    
+    delta = chunk.json.choices[1].delta
+    get(delta, :reasoning_content, nothing)
+end

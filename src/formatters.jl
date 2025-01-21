@@ -6,6 +6,7 @@ const AI_COLOR = Crayon(foreground=:green)
 const ERROR_COLOR = Crayon(foreground=:red)
 const INFO_COLOR = Crayon(foreground=:blue)
 const TOKEN_COLOR = Crayon(foreground=:cyan)
+const REASONING_COLOR = Crayon(foreground=:dark_gray, italics=true)
 
 """
     default_token_formatter(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)

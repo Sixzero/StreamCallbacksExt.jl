@@ -30,5 +30,12 @@ Calculate costs for OpenAI models with their specific cache multipliers.
 """
 function get_cost(::StreamCallbacks.OpenAIStream, model::String, tokens::TokenCounts)
     (; cost_of_token_prompt, cost_of_token_generation) = PromptingTools.get(PromptingTools.MODEL_REGISTRY, model, (; cost_of_token_prompt=0.0, cost_of_token_generation=0.0))
-    calculate_cost(cost_of_token_prompt, cost_of_token_generation, tokens, 1.0, 0.5)
+    cache_read_multiplier= 0.5
+    if model == "deepseek-chat"
+        cache_read_multiplier = 0.1
+    end
+    if model == "deepseek-reasoner"
+        cache_read_multiplier = 0.14/0.55
+    end
+    calculate_cost(cost_of_token_prompt, cost_of_token_generation, tokens, 1.0, cache_read_multiplier)
 end

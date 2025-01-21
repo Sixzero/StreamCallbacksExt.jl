@@ -24,7 +24,6 @@
 
     StreamCallbacks.callback(cb, chunk)
     output = String(take!(buf))
-    @show output
     @test !isempty(output)
     @test contains(output, "Hello")
     @test cb.total_tokens.input + cb.total_tokens.output > 0
