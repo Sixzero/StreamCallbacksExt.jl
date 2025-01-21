@@ -20,6 +20,7 @@ For detailed API documentation, see the [API Reference](api.md).
 - Support for different stream flavors (OpenAI, Anthropic)
 - Flexible hook system for customizing callback behavior
 - Channel-based async processing for cleaner stacktraces
+- Special handling for reasoning tokens (chain-of-thought output in italics)
 
 ## Installation
 

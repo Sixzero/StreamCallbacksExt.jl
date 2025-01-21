@@ -14,6 +14,7 @@ Extension package for [StreamCallbacks.jl](https://github.com/svilupp/StreamCall
 - Customizable token and content formatters
 - Support for different stream flavors (OpenAI, Anthropic)
 - Customizable hooks for stream events
+- Handles reasoning tokens with special formatting (for models with chain-of-thought)
 
 ## Installation
 
