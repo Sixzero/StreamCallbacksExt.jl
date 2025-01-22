@@ -68,15 +68,16 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     try
         if !isnothing(cb.flavor)
             if (reasoning = extract_reasoning(cb.flavor, chunk)) !== nothing
-                !cb.in_reasoning_mode && print(cb.out, "$(REASONING_COLOR)")
+                formatted = cb.content_formatter(reasoning)
+                !isnothing(formatted) && !cb.in_reasoning_mode && print(cb.out, "$(REASONING_COLOR)") # some burned in formatting
                 cb.in_reasoning_mode = true
-                print(cb.out, reasoning)
+                !isnothing(formatted) && print(cb.out, formatted)
             elseif (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
+                formatted = cb.content_formatter(text)
                 if cb.in_reasoning_mode
-                    print(cb.out, "$(Crayon(reset=true))\n\n")
+                    !isnothing(formatted) && print(cb.out, "$(Crayon(reset=true))\n\n")
                     cb.in_reasoning_mode = false
                 end
-                formatted = cb.content_formatter(text)
                 !isnothing(formatted) && print(cb.out, formatted)
             end
         end
