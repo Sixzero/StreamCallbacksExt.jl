@@ -27,10 +27,10 @@ StreamCallbacksExt.StreamCallbackChannelWrapper
 StreamCallbacksExt.default_token_formatter
 StreamCallbacksExt.compact_token_formatter
 StreamCallbacksExt.default_content_formatter
-StreamCallbacksExt.format_user_message
+StreamCallbacksExt.format_user_meta
 StreamCallbacksExt.format_error_message
 StreamCallbacksExt.format_info_message
-StreamCallbacksExt.format_ai_message
+StreamCallbacksExt.format_ai_meta
 ```
 
 ## Extractors

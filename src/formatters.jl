@@ -40,23 +40,45 @@ Default content formatter that returns the text unchanged.
 default_content_formatter(text::AbstractString) = text
 
 """
-    format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
+    format_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
 Format user message with token counts in green color, including token statistics and optional timing.
 """
-function format_user_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
+function format_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? "" : ", $(round(elapsed; digits=2))s"
     "$(USER_COLOR)User message: [$(tokens.input) in, $(tokens.cache_write) cache creation, $(tokens.cache_read) cache read, \$$(round(cost; digits=3))$elapsed_str]$(Crayon(reset=true))"
 end
 
+function dict_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
+    elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
+    Dict(
+        "event" => "user_meta",
+        "input" => tokens.input,
+        "cache_write" => tokens.cache_write,
+        "cache_read" => tokens.cache_read,
+        "cost" => round(cost; digits=3),
+        "elapsed" => elapsed_str
+    )
+end
+
 """
-    format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
+    format_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing) -> String
 
 Format AI message with token counts in green color, including output tokens, cost and optional timing.
 """
-function format_ai_message(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
+function format_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? "" : ", $(round(elapsed; digits=2))s"
     "$(AI_COLOR)AI message: [$(tokens.output) out, \$$(round(cost; digits=3))$elapsed_str]$(Crayon(reset=true))"
+end
+
+function dict_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
+    elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
+    Dict(
+        "event" => "ai_meta",
+        "output" => tokens.output,
+        "cost" => round(cost; digits=3),
+        "elapsed" => elapsed_str
+    )
 end
 
 """

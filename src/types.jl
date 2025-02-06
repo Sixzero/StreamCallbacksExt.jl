@@ -167,8 +167,8 @@ cb = StreamCallbackWithHooks(
 
     # Hooks with colored formatters
     content_formatter::Function = identity
-    on_meta_usr::Function = (tokens, cost=0.0, elapsed=nothing) -> format_user_message(tokens, cost, elapsed)
-    on_meta_ai::Function = (tokens, cost=0.0, elapsed=nothing) -> format_ai_message(tokens, cost, elapsed)
+    on_meta_usr::Function = (tokens, cost=0.0, elapsed=nothing) -> format_user_meta(tokens, cost, elapsed)
+    on_meta_ai::Function = (tokens, cost=0.0, elapsed=nothing) -> format_ai_meta(tokens, cost, elapsed)
     on_error::Function = e -> format_error_message(e)
     on_done::Function = () -> nothing
     on_start::Function = () -> nothing
