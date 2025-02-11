@@ -91,6 +91,8 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     if !isnothing(cb.flavor) && (stop_seq = extract_stop_sequence(cb.flavor, chunk)) !== nothing
         cb.run_info.stop_sequence = stop_seq
         cb.on_stop_sequence(stop_seq)
+        msg = cb.on_done()
+        !isnothing(msg) && println(cb.out, msg)
     end
 
     # Handle token metadata with flavor-specific dispatch

@@ -1,6 +1,8 @@
 """
     StreamCallbackChannelWrapper(callback::StreamCallbackWithHooks; buffer_size=32)
 
+# !NOTE  DANGER! the @async might not have finish before someone would use the value of cb StreamCallbackChannelWrapper THIS NEEDS TO BE FIXED!
+
 A wrapper that processes stream chunks through a channel, providing isolated error handling
 and shallow async processing. This results in cleaner stacktraces when errors occur, as the
 async processing is only one level deep.

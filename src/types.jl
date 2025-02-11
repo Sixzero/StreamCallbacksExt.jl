@@ -69,6 +69,13 @@ get_inference_elapsed(info::RunInfo) = !isnothing(info.inference_start) && !isno
     info.last_message_time - info.inference_start : nothing
 
 """
+    needs_tool_execution(info::RunInfo)
+
+Check if the run was terminated because the model is requested tool execution (with stop_sequence).
+"""
+needs_tool_execution(info::RunInfo) = !isnothing(info.stop_sequence)
+
+"""
     StreamCallbackWithTokencounts(; 
         out=stdout, 
         flavor=nothing, 
@@ -174,3 +181,4 @@ cb = StreamCallbackWithHooks(
     on_start::Function = () -> nothing
     on_stop_sequence::Function = identity
 end
+
