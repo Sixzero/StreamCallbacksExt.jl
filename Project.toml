@@ -9,9 +9,9 @@ PromptingTools = "670122d1-24a8-4d70-bfce-740807c42192"
 StreamCallbacks = "c1b9e933-98a0-46fc-8ea7-3b58b195fb0a"
 
 [compat]
-Crayons = "≥4.1.1"
+Crayons = "4.1"
 PromptingTools = "≥0.69.0"
-StreamCallbacks = "≥0.5.1"
+StreamCallbacks = "0.5"
 julia = "1"
 
 [extras]
