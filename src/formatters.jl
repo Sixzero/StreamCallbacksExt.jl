@@ -52,7 +52,6 @@ end
 function dict_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
     Dict(
-        "event" => "user_meta",
         "input" => tokens.input,
         "cache_write" => tokens.cache_write,
         "cache_read" => tokens.cache_read,
@@ -74,7 +73,6 @@ end
 function dict_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
     elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
     Dict(
-        "event" => "ai_meta",
         "output" => tokens.output,
         "cost" => round(cost; digits=3),
         "elapsed" => elapsed_str
