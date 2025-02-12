@@ -9,6 +9,7 @@ using StreamCallbacksExt
 ```@docs
 StreamCallbacksExt.get_total_elapsed
 StreamCallbacksExt.get_inference_elapsed
+StreamCallbacksExt.needs_tool_execution
 ```
 
 ## Types
@@ -39,6 +40,8 @@ StreamCallbacksExt.format_ai_meta
 StreamCallbacksExt.extract_stop_sequence
 StreamCallbacksExt.extract_tokens
 StreamCallbacksExt.extract_model
+StreamCallbacksExt.extract_reasoning(::StreamCallbacks.AbstractStreamFlavor, ::StreamCallbacks.AbstractStreamChunk)
+StreamCallbacksExt.extract_reasoning(::StreamCallbacks.OpenAIStream, ::StreamCallbacks.AbstractStreamChunk)
 ```
 
 ## Token Handlers
