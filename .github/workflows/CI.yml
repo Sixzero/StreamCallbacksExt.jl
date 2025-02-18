@@ -21,7 +21,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         env:
           cache-name: cache-artifacts
         with:
@@ -41,7 +41,7 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     permissions:
-      actions: write # needed to allow julia-actions/cache to proactively delete old caches that it has created
+      actions: write
       contents: write
       statuses: write
     steps:
