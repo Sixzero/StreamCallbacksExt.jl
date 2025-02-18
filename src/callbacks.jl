@@ -33,8 +33,8 @@ function StreamCallbacks.callback(cb::StreamCallbackWithTokencounts, chunk::Stre
 
         cb.run_info.last_message_time = time()
         elapsed = time() - cb.run_info.creation_time
-
-        println(cb.out, cb.token_formatter(tokens, cost, elapsed))
+        msg = cb.token_formatter(tokens, cost, elapsed)
+        isa(msg, AbstractString) && println(cb.out, msg)
     end
 
     # Handle content
@@ -56,7 +56,7 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     if get(chunk.json, :type, nothing) == "message_start"
         cb.run_info.inference_start = time()
         msg = cb.on_start()
-        !isnothing(msg) && println(cb.out, msg)
+        isa(msg, AbstractString) && println(cb.out, msg)
     end
 
     # Extract model info if needed
@@ -69,21 +69,21 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
         if !isnothing(cb.flavor)
             if (reasoning = extract_reasoning(cb.flavor, chunk)) !== nothing
                 formatted = cb.content_formatter(reasoning)
-                !isnothing(formatted) && !cb.in_reasoning_mode && print(cb.out, "$(REASONING_COLOR)") # some burned in formatting
+                isa(formatted, AbstractString) && !cb.in_reasoning_mode && print(cb.out, "$(REASONING_COLOR)") # some burned in formatting
                 cb.in_reasoning_mode = true
-                !isnothing(formatted) && print(cb.out, formatted)
+                isa(formatted, AbstractString) && print(cb.out, formatted)
             elseif (text = StreamCallbacks.extract_content(cb.flavor, chunk; kwargs...)) !== nothing
                 formatted = cb.content_formatter(text)
                 if cb.in_reasoning_mode
-                    !isnothing(formatted) && print(cb.out, "$(Crayon(reset=true))\n\n")
+                    isa(formatted, AbstractString) && print(cb.out, "$(Crayon(reset=true))\n\n")
                     cb.in_reasoning_mode = false
                 end
-                !isnothing(formatted) && print(cb.out, formatted)
+                isa(formatted, AbstractString) && print(cb.out, formatted)
             end
         end
     catch e
         msg = cb.on_error(e)
-        !isnothing(msg) && println(stderr, msg)
+        isa(msg, AbstractString) && println(stderr, msg)
         cb.throw_on_error && rethrow(e)
     end
 
@@ -92,7 +92,7 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
         cb.run_info.stop_sequence = stop_seq
         cb.on_stop_sequence(stop_seq)
         msg = cb.on_done()
-        !isnothing(msg) && println(cb.out, msg)
+        isa(msg, AbstractString) && println(cb.out, msg)
     end
 
     # Handle token metadata with flavor-specific dispatch
@@ -108,6 +108,6 @@ function StreamCallbacks.callback(cb::StreamCallbackWithHooks, chunk::StreamChun
     # Handle completion
     if get(chunk.json, :type, nothing) in ("message_end", "message_stop")
         msg = cb.on_done()
-        !isnothing(msg) && println(cb.out, msg)
+        isa(msg, AbstractString) && println(cb.out, msg)
     end
 end

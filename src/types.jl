@@ -73,7 +73,9 @@ get_inference_elapsed(info::RunInfo) = !isnothing(info.inference_start) && !isno
 
 Check if the run was terminated because the model is requested tool execution (with stop_sequence).
 """
-needs_tool_execution(info::RunInfo) = !isnothing(info.stop_sequence)
+function needs_tool_execution(info::RunInfo)
+    return !isnothing(info.stop_sequence)
+end
 
 """
     StreamCallbackWithTokencounts(; 

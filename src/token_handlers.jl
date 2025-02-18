@@ -7,9 +7,9 @@ All metadata is sent at once, so both handlers are called sequentially.
 function handle_token_metadata(::StreamCallbacks.OpenAIStream, cb, tokens, cost, elapsed)
     # OpenAI sends all token info at once, so call both handlers
     msg = cb.on_meta_usr(tokens, cost, elapsed)
-    !isnothing(msg) && println(cb.out, "\n"*msg)
+    isa(msg, AbstractString) && println(cb.out, "\n" * msg)
     msg = cb.on_meta_ai(tokens, cost, elapsed)
-    !isnothing(msg) && println(cb.out, msg)
+    isa(msg, AbstractString) && println(cb.out, msg)
 end
 
 """
@@ -19,11 +19,11 @@ Dispatches to user or AI handler based on whether output tokens are present.
 function handle_token_metadata(::StreamCallbacks.AnthropicStream, cb, tokens, cost, elapsed)
     # For Anthropic, dispatch based on token type
     msg = if tokens.output > 0
-        "\n"*cb.on_meta_ai(tokens, cost, elapsed)
+        cb.on_meta_ai(tokens, cost, elapsed)
     else
         cb.on_meta_usr(tokens, cost, elapsed)
     end
-    !isnothing(msg) && println(cb.out, msg)
+    isa(msg, AbstractString) && println(cb.out, tokens.output > 0 ? "\n" * msg : msg)
 end
 
 """
@@ -35,5 +35,5 @@ function handle_token_metadata(::StreamCallbacks.AbstractStreamFlavor, cb, token
     else
         cb.on_meta_usr(tokens, cost, elapsed)
     end
-    !isnothing(msg) && println(cb.out, msg)
+    isa(msg, AbstractString) && println(cb.out, msg)
 end
