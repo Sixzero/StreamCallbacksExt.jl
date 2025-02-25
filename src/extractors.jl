@@ -186,3 +186,21 @@ function extract_reasoning(::StreamCallbacks.OpenAIStream, chunk::StreamCallback
     delta = chunk.json.choices[1].delta
     get(delta, :reasoning_content, nothing)
 end
+
+"""
+    extract_reasoning(::StreamCallbacks.AnthropicStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract reasoning/thinking content from Anthropic stream chunks.
+"""
+function extract_reasoning(::StreamCallbacks.AnthropicStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    isnothing(chunk.json) && return nothing
+    
+    # Handle content_block_delta with thinking_delta
+    if get(chunk.json, :type, nothing) == "content_block_delta" && 
+       haskey(chunk.json, :delta) && 
+       get(chunk.json[:delta], :type, nothing) == "thinking_delta"
+        return get(chunk.json[:delta], :thinking, nothing)
+    end
+    
+    nothing
+end
