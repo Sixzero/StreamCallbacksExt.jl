@@ -3,8 +3,8 @@
 
 Default token extractor that warns about unimplemented flavors.
 """
-function extract_tokens(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
-    @warn "Unimplemented token extractor for flavor: $(typeof(flavor))"
+function extract_tokens(flavor::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+    # @warn "Unimplemented extract_tokens for flavor: $(typeof(flavor))"
     nothing
 end
 
@@ -111,8 +111,8 @@ end
 
 Default model extractor that warns about unimplemented flavors.
 """
-function extract_model(::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
-    @warn "Unimplemented model extractor for flavor: $(typeof(flavor))"
+function extract_model(flavor::StreamCallbacks.AbstractStreamFlavor, chunk::StreamCallbacks.AbstractStreamChunk)
+    # @warn "Unimplemented extract_model for flavor: $(typeof(flavor))"
     nothing
 end
 
