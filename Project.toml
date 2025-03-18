@@ -1,7 +1,7 @@
 name = "StreamCallbacksExt"
 uuid = "318dcf79-f1de-4874-b31b-6e12fc76f75a"
 authors = ["SixZero <havliktomi@gmail.com>"]
-version = "0.4.1"
+version = "0.4.2"
 
 [deps]
 Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
@@ -14,7 +14,7 @@ JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 
 [compat]
 StreamCallbacks = "≥0.5"
-PromptingTools = "0.72, 0.73"
+PromptingTools = "0.72, 0.73, 0.74"
 Crayons = "≥4"
 julia = "1"
 
