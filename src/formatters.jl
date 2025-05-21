@@ -50,13 +50,13 @@ function format_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Flo
 end
 
 function dict_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
-    elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
+    # elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
     Dict(
         "input" => tokens.input,
         "cache_write" => tokens.cache_write,
         "cache_read" => tokens.cache_read,
         "cost" => round(cost; digits=3),
-        "elapsed" => elapsed_str
+        "elapsed" => elapsed
     )
 end
 
@@ -71,7 +71,7 @@ function format_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float
 end
 
 function dict_ai_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float64,Nothing}=nothing)
-    elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
+    # elapsed_str = isnothing(elapsed) ? nothing : round(elapsed; digits=2)
     Dict(
         "output" => tokens.output,
         "cost" => round(cost; digits=6),
