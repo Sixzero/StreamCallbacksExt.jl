@@ -55,7 +55,7 @@ function dict_user_meta(tokens::TokenCounts, cost::Float64, elapsed::Union{Float
         "input" => tokens.input,
         "cache_write" => tokens.cache_write,
         "cache_read" => tokens.cache_read,
-        "cost" => round(cost; digits=3),
+        "cost" => round(cost; digits=6),
         "elapsed" => elapsed
     )
 end
