@@ -14,7 +14,7 @@ JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 
 [compat]
 StreamCallbacks = "≥0.5"
-PromptingTools = "0.72, 0.73, 0.74"
+PromptingTools = "≥0.72"
 Crayons = "≥4"
 julia = "1"
 
