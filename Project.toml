@@ -1,7 +1,7 @@
 name = "StreamCallbacksExt"
 uuid = "318dcf79-f1de-4874-b31b-6e12fc76f75a"
 authors = ["SixZero <havliktomi@gmail.com>"]
-version = "0.4.2"
+version = "0.4.3"
 
 [deps]
 Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
