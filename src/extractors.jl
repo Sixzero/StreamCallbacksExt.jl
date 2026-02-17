@@ -57,11 +57,15 @@ function extract_tokens(::StreamCallbacks.OpenAIStream, chunk::StreamCallbacks.A
         cache_read = get(prompt_details, :cached_tokens, 0)
         audio_tokens = get(prompt_details, :audio_tokens, 0)
 
+        completion_details = get(usage, :completion_tokens_details, Dict())
+        reasoning_tokens = get(completion_details, :reasoning_tokens, 0)
+
         return TokenCounts(
             input = usage.prompt_tokens - cache_read - audio_tokens,
             output = usage.completion_tokens,
             cache_write = 0,
-            cache_read = cache_read
+            cache_read = cache_read,
+            reasoning = reasoning_tokens
         )
     end
 
@@ -196,11 +200,71 @@ function extract_reasoning(::StreamCallbacks.AnthropicStream, chunk::StreamCallb
     isnothing(chunk.json) && return nothing
     
     # Handle content_block_delta with thinking_delta
-    if get(chunk.json, :type, nothing) == "content_block_delta" && 
-       haskey(chunk.json, :delta) && 
+    if get(chunk.json, :type, nothing) == "content_block_delta" &&
+       haskey(chunk.json, :delta) &&
        get(chunk.json[:delta], :type, nothing) == "thinking_delta"
         return get(chunk.json[:delta], :thinking, nothing)
     end
-    
+
     nothing
+end
+
+# ============ ResponseStream extractors ============
+
+"""
+    extract_tokens(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract token counts from Response API stream chunks (response.completed events).
+"""
+function extract_tokens(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    !isnothing(chunk.json) || return nothing
+
+    chunk_type = get(chunk.json, :type, "")
+    chunk_type == "response.completed" || return nothing
+
+    response = get(chunk.json, :response, nothing)
+    isnothing(response) && return nothing
+    usage = get(response, :usage, nothing)
+    isnothing(usage) && return nothing
+
+    input_details = get(usage, :input_tokens_details, Dict())
+    output_details = get(usage, :output_tokens_details, Dict())
+
+    TokenCounts(
+        input = get(usage, :input_tokens, 0) - get(input_details, :cached_tokens, 0),
+        output = get(usage, :output_tokens, 0),
+        cache_write = 0,
+        cache_read = get(input_details, :cached_tokens, 0),
+        reasoning = get(output_details, :reasoning_tokens, 0)
+    )
+end
+
+"""
+    extract_model(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract model identifier from Response API stream chunks.
+"""
+function extract_model(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    !isnothing(chunk.json) || return nothing
+
+    chunk_type = get(chunk.json, :type, "")
+    chunk_type in ("response.created", "response.completed") || return nothing
+
+    response = get(chunk.json, :response, nothing)
+    isnothing(response) && return nothing
+    get(response, :model, nothing)
+end
+
+"""
+    extract_reasoning(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+
+Extract reasoning content from Response API reasoning_summary_text.delta events.
+"""
+function extract_reasoning(::StreamCallbacks.ResponseStream, chunk::StreamCallbacks.AbstractStreamChunk)
+    !isnothing(chunk.json) || return nothing
+
+    chunk_type = get(chunk.json, :type, "")
+    chunk_type == "response.reasoning_summary_text.delta" || return nothing
+
+    get(chunk.json, :delta, nothing)
 end

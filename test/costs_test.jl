@@ -13,4 +13,11 @@
         @test cost isa Float64
         @test cost >= 0.0
     end
+
+    @testset "Warn on unknown model" begin
+        @test_logs (:warn, r"No cost information found .* unknown-model") begin
+            cost = get_cost(StreamCallbacks.OpenAIStream(), "unknown-model", tokens)
+            @test cost == 0.0
+        end
+    end
 end

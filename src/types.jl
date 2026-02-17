@@ -16,13 +16,15 @@ Note: Total input tokens = input + cache_write + cache_read
     output::Int = 0
     cache_write::Int = 0
     cache_read::Int = 0
+    reasoning::Int = 0
 end
 
 +(a::TokenCounts, b::TokenCounts) = TokenCounts(
     input = a.input + b.input,
     output = a.output + b.output,
     cache_write = a.cache_write + b.cache_write,
-    cache_read = a.cache_read + b.cache_read
+    cache_read = a.cache_read + b.cache_read,
+    reasoning = a.reasoning + b.reasoning
 )
 
 """
@@ -176,6 +178,7 @@ cb = StreamCallbackWithHooks(
 
     # Hooks with colored formatters
     content_formatter::Function = identity
+    reasoning_formatter::Function = text -> "$(REASONING_COLOR)$text$(Crayon(reset=true))"
     on_meta_usr::Function = (tokens, cost=0.0, elapsed=nothing) -> format_user_meta(tokens, cost, elapsed)
     on_meta_ai::Function = (tokens, cost=0.0, elapsed=nothing) -> format_ai_meta(tokens, cost, elapsed)
     on_error::Function = e -> format_error_message(e)
